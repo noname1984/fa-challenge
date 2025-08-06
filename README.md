@@ -22,7 +22,8 @@ npm run test => to run unit tests
    - React window to handle rendering lots of messages. This will help to avoid slowness for the chat
 4. I'm using throttling technique(setInterval) to render incoming streams every 100ms. This will make sure a smooth rendering for text from streaming response.
 5. I also handled empty input and some API errors.
-6. **Improvements**:
+6. I calculate and display time to first token(ttft), response time and tokens per second values.
+7. **Improvements**:
    - Handle more errors
    - Render markdown better, also support copy code blocks
    - Support upload files/drag and drop for the input
