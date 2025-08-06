@@ -1,0 +1,11 @@
+node_modules/
+dist/
+``` :contentReference[oaicite:2]{index=2}
+
+Add a format script:
+
+```jsonc
+"scripts": {
+  // …existing scripts…
+  "format": "prettier --write ."
+}
