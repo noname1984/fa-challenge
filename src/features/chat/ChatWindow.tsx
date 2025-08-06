@@ -35,6 +35,9 @@ export default function ChatWindow() {
   const outerRef = useRef<HTMLDivElement>(null);
   const bufferRef = useRef("");
   const timerRef = useRef<number | undefined>(undefined);
+  const ttftRef = useRef(0); // time to first token
+  const responseTimeRef = useRef(0);
+  const totalTokensRef = useRef(0);
 
   // Track if user is scrolled to (or near) the bottom
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -61,6 +64,15 @@ export default function ChatWindow() {
         const copy = [...prev];
         const last = { ...copy[copy.length - 1] };
         last.content += chunk;
+        last.ttft = ttftRef.current;
+        last.responseTime = responseTimeRef.current;
+        if (responseTimeRef.current) {
+          last.tokenps = parseFloat(
+            ((totalTokensRef.current * 1000) / responseTimeRef.current).toFixed(
+              2
+            )
+          );
+        }
         copy[copy.length - 1] = last;
         return copy;
       });
@@ -165,6 +177,9 @@ export default function ChatWindow() {
           id: prev.length + 1,
           role: "assistant",
           content: "",
+          ttft: 0,
+          responseTime: 0,
+          tokenps: 0,
         },
       ];
     });
@@ -195,6 +210,7 @@ export default function ChatWindow() {
         }),
       };
       try {
+        const start = window.performance.now();
         const response = await fetch(url, options);
         if (!response.ok) {
           const errorMsg = await response
@@ -210,7 +226,14 @@ export default function ChatWindow() {
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
+            responseTimeRef.current = Math.round(
+              window.performance.now() - start
+            );
             break;
+          }
+
+          if (!ttftRef.current) {
+            ttftRef.current = Math.round(window.performance.now() - start);
           }
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split(/\r?\ndata: /);
@@ -224,7 +247,7 @@ export default function ChatWindow() {
                 return;
               }
 
-              const { choices } = JSON.parse(line);
+              const { choices, usage } = JSON.parse(line);
               const delta = choices[0].delta;
 
               if (delta.content) {
@@ -232,6 +255,10 @@ export default function ChatWindow() {
                 if (!timerRef.current) {
                   timerRef.current = window.setInterval(flush, 100);
                 }
+              }
+
+              if (usage) {
+                totalTokensRef.current = usage.completion_tokens;
               }
             }
           }

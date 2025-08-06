@@ -29,6 +29,7 @@ export function AssistantMessage({ message }: { message: MessageType }) {
   return (
     <section className="border-gray-600 border-1 w-full rounded-[10px] p-[10px]">
       <Message message={message} />
+      <p className="text-[10px] text-purple-500">{`ttft: ${message.ttft}ms, response: ${message.responseTime}ms, ${message.tokenps} tokens/s`}</p>
     </section>
   );
 }
@@ -36,7 +37,7 @@ export function AssistantMessage({ message }: { message: MessageType }) {
 export function UserMessage({ message }: { message: MessageType }) {
   return (
     <section className="w-full">
-      <section className="bg-stone-600 rounded-[10px] p-[10px] w-1/2 float-right">
+      <section className="bg-indigo-400 rounded-[10px] p-[10px] w-1/2 float-right">
         <Message message={message} />
       </section>
     </section>
