@@ -24,6 +24,8 @@ describe("AssistantMessage & UserMessage", () => {
     render(<UserMessage message={plain} />);
     expect(screen.getByText("Just a test message")).toBeInTheDocument();
     const wrapper = screen.getByText("Just a test message").closest("section");
-    expect(wrapper).toHaveClass("bg-stone-600");
+    expect(wrapper).toHaveClass(
+      "bg-indigo-400 rounded-[10px] p-[10px] w-1/2 float-right"
+    );
   });
 });

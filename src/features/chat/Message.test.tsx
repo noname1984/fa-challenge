@@ -24,7 +24,9 @@ describe("Message components", () => {
 
     // The outer section has the border class
     const section = screen.getByText("Hello").closest("section");
-    expect(section).toHaveClass("border-gray-600");
+    expect(section).toHaveClass(
+      "border-gray-600 border-1 w-full rounded-[10px] p-[10px]"
+    );
   });
 
   it("UserMessage renders markdown content inside a colored background", () => {
@@ -33,7 +35,9 @@ describe("Message components", () => {
     expect(screen.getByText("Hello")).toBeInTheDocument();
     expect(screen.getByText("world")).toBeInTheDocument();
 
-    const section = screen.getByText("Hello").closest("section");
-    expect(section).toHaveClass("bg-stone-600");
+    const section = screen.getByText("Hello").closest("section section");
+    expect(section).toHaveClass(
+      "bg-indigo-400 rounded-[10px] p-[10px] w-1/2 float-right"
+    );
   });
 });
